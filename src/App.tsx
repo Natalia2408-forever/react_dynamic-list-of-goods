@@ -7,6 +7,7 @@ import { Good } from './types/Good';
 
 export const App: React.FC = () => {
   const [goods, setGoods] = useState<Good[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   return (
     <div className="App">
@@ -15,7 +16,9 @@ export const App: React.FC = () => {
         type="button"
         data-cy="all-button"
         onClick={() => {
-          getAll().then(result => setGoods(result));
+          getAll()
+            .then(result => setGoods(result))
+            .catch(e => setError((e as Error).message));
         }}
       >
         Load all goods
@@ -25,7 +28,9 @@ export const App: React.FC = () => {
         type="button"
         data-cy="first-five-button"
         onClick={() => {
-          get5First().then(result => setGoods(result));
+          get5First()
+            .then(result => setGoods(result))
+            .catch(e => setError((e as Error).message));
         }}
       >
         Load 5 first goods
@@ -35,12 +40,18 @@ export const App: React.FC = () => {
         type="button"
         data-cy="red-button"
         onClick={() => {
-          getRedGoods().then(result => setGoods(result));
+          getRedGoods()
+            .then(result => setGoods(result))
+            .catch(e => setError((e as Error).message));
         }}
       >
         Load red goods
       </button>
-
+      {error && (
+        <div className="error" data-cy="error">
+          {error}
+        </div>
+      )}
       <GoodsList goods={goods} />
     </div>
   );
